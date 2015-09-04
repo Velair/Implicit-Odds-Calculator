@@ -1,0 +1,228 @@
+﻿@{
+    Layout = null;
+}
+
+@model ImplicitOddsCalculator.ViewModels.TableLayout
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" charset="utf-8" />
+    <title>Odds</title>
+
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/modern-business.css" rel="stylesheet" />
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+
+</head>
+<body style="padding-top:10px">
+    <div class="container">
+
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">
+                    Texas Hold'em Implicit Odds Calculator
+                </h1>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4><i class="fa fa-fw fa-check"></i><b> 1 </b>Set the Layout</h4>
+                    </div>
+                    <div class="panel-body">
+                        <p>Select the scenario you want to evaluate, or just choose a random setup.</p>
+                        <a href="#" class="btn btn-default">Learn More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4><i class="fa fa-fw fa-check"></i><b> 2 </b>Select your Outs &amp; Bets</h4>
+                    </div>
+                    <div class="panel-body">
+                        <p>Check the outs that will give you the best hand, and set the Actual Pot and the amount the Villain is betting.</p>
+                        <a href="#" class="btn btn-default">Learn More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4><i class="fa fa-fw fa-check"></i><b> 3 </b>Evaluate your position</h4>
+                    </div>
+                    <div class="panel-body">
+                        <p>Given the information, you can now decide if it's worth calling the bet or folding.</p>
+                        <a href="#" class="btn btn-default">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col-md-6" id="DeckSection">
+                @Html.Partial("DeckSection", Model)
+            </div>
+
+
+            <div class="col-md-6">
+                <div class="row">
+                    <fieldset>
+                        <legend>Outs and Bets</legend>
+                        <div class="col-md-5" id="OutsSection">
+                            @Html.Partial("OutsSection", Model)
+                        </div>
+                        <div class="col-md-7">
+                            <div class="col-md-6">
+                                <label>Villain Bet</label>
+                                <input class="form-control txtOddInput" type="text" value="50" id="txtVillain" />
+                            </div>
+                            <div class="col-md-6">
+                                <label>Initial Pot</label>
+                                <input class="form-control txtOddInput" type="text" value="100" id="txtInitialPot" />
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="well">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Outs</label>
+                                <input class="form-control" id="txtOuts" readonly="true" />
+                            </div>
+                            <div class="col-md-4">
+                                <label>Equity</label>
+                                <input class="form-control" id="txtEquity" readonly="true" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <label>Final Pot</label>
+                                <input class="form-control" id="txtFinalPot" type="text" readonly="true" />
+                            </div>
+                            <div class="col-xs-4">
+                                <label>Implicit Odds Value</label>
+                                <input class="form-control" id="txtOddsValue" type="text" readonly="true" />
+                            </div>
+                            <div class="col-xs-4">
+                                <label>Implicit Odds Percent</label>
+                                <input class="form-control" id="txtOddsPercent" type="text" readonly="true" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <hr>
+    <div class="container">
+        <footer>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <p>Copyright &copy; Your Website 2014</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+
+    <script>
+        $(function () {
+
+            if ($('#btnSelectTurn').is(":disabled")) {
+                $('#txtTurn').prop('disabled', 'disabled');
+            }
+            if ($('#btnSelectRiver').is(":disabled")) {
+                $('#txtRiver').prop('disabled', 'disabled');
+            }
+        });
+
+        function CalculateImplicit() {
+
+            function GetOdds() {
+                var finalPot = +($("#txtInitialPot").val()) + +($("#txtVillain").val()) * 2;
+                var breakeven = Math.ceil((((100 - $("#txtEquity").val()) * $("#txtVillain").val()) / $("#txtEquity").val()) - $("#txtInitialPot").val() - $("#txtVillain").val());
+                var percent = Math.ceil(breakeven * 100 / finalPot);
+
+                $("#txtFinalPot").val(finalPot);
+                $("#txtOddsPercent").val(percent + "%");
+                $("#txtOddsValue").val(breakeven);
+            }
+
+            $(".listOuts").change(function () {
+                var outs = 0;
+                var noCards = 0;
+
+                $('#chbxNextHands').find('input:checked').each(function () {
+                    outs += parseInt($(this).val());
+                })
+
+                if ($("#txtRiver").val() != "") { noCards = 0; }
+                else if ($("#txtTurn").val() != "") { noCards = 6; }
+                else { if ($("#txtFlop").val() != "" && $("#txtMyHand").val() != "") { noCards = 5; } }
+
+                var equity = Math.ceil(outs * 100 / (52 - noCards));
+
+                $("#txtEquity").attr("value", equity);
+                $("#txtOuts").attr("value", outs);
+                GetOdds();
+            })
+
+            $(".txtOddInput").blur(function () {
+
+                if ($.isNumeric($(this).val()) && $(this).val()>0) {
+                    $(this).attr("value", $(this).val());
+                }
+                else { $(this).val(this.defaultValue); }
+                GetOdds();
+            })
+
+            $(".txtOddInput").keydown(function (event) {
+
+                if (event.which == 13) {
+                    event.preventDefault();
+                    $(this).trigger("blur");
+                }
+            })
+
+            if ($("#chbxNextHands").children().length != 0) { $(".listOuts").trigger("change"); }
+            else {
+                $("#txtEquity").attr("value", 0);
+                $("#txtOuts").attr("value", 0);
+                $("#txtFinalPot").val(+($("#txtInitialPot").val()) + +($("#txtVillain").val()) * 2);
+                $("#txtOddsPercent").val(0 + "%");
+                $("#txtOddsValue").val(0);
+            }
+            
+        };
+
+        function MultipartialUpdate(views) {
+            if (views.get_data) views = eval(views.get_data()); //for the MVC2 compatibility
+            for (v in views) {
+                if (views[v].script) {
+                    eval(views[v].script);
+                }
+                else {
+                    $('#' + views[v].updateTargetId).html(views[v].html);
+                }
+            }
+
+            CalculateImplicit();
+            
+            return false;
+        }
+
+    </script>
+
+</body>
+</html>

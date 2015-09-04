@@ -1,0 +1,22 @@
+﻿@model ImplicitOddsCalculator.ViewModels.TableLayout
+
+<div class="panel panel-default" id="handsPanel">
+    <div class="panel-heading text-center">
+        <h4><i>@Model.bestHand</i></h4>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-xs-12">
+                <ul id="chbxNextHands" style="list-style:none;padding-left: 25px;">
+                    @foreach (var item in Model.listOuts)
+                    {
+                        <li>
+                            <input type="checkbox" class="listOuts" checked="checked" name="listOuts" id="@item.Key" value="@item.Value" />
+                            <label>@item.Key: @item.Value</label>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

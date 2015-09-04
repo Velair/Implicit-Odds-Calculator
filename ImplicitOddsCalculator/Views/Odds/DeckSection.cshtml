@@ -1,0 +1,127 @@
+﻿@model ImplicitOddsCalculator.ViewModels.TableLayout
+
+<div class="row">
+    <div class="col-md-12 text-center">
+        <img class="carta" id="imgFlop1" src="@Model.imgFlop1" height="150" width="100" style="padding:3px; background-color:lightcoral" />
+        <img class="carta" id="imgFlop2" src="@Model.imgFlop2" height="150" width="100" style="padding:3px; background-color:lightcoral" />
+        <img class="carta" id="imgFlop3" src="@Model.imgFlop3" height="150" width="100" style="padding:3px; background-color:lightcoral" />
+        <img class="carta" id="imgTurn" src="@Model.imgTurn" height="150" width="100" style="padding:3px; background-color:lightcoral" />
+        <img class="carta" id="imgRiver" src="@Model.imgRiver" height="150" width="100" style="padding:3px; background-color:lightcoral" />
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-4">
+        @using (Ajax.BeginForm("MultipleCommand", "Odds", new { street = "F" }, new AjaxOptions()
+                                {
+                                    OnSuccess = "MultipartialUpdate"
+                                }))
+        {
+            <div class="row">
+                <div class="col-md-7" style="padding-right:0px">
+                    @Html.TextBoxFor(t => t.txtFlop, new { @class = "form-control", maxlength = "6", placeholder = "Flop", Value = @Model.txtFlop, pattern = ".{6}", required = "required" })
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" id="btnSelectFlop" name="Command" value="Select" class="btn btn-success btn-block">S</button>
+                </div>
+
+            </div>
+            <div class="row" style="padding-top:5px">
+                <div class="col-md-3">
+                    <button type="submit" id="btnRandomFlop" name="Command" value="Random" formnovalidate class="btn btn-warning btn-sm">R</button>
+                </div>
+                <div class="col-md-3" style="padding-left:0px">
+                    <button type="submit" id="btnClearFlop" name="Command" value="Clear" formnovalidate @Model.disableClearFlop class="btn btn-danger btn-sm">C</button>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="col-md-4">
+        @using (Ajax.BeginForm("MultipleCommand", "Odds", new { street = "T" }, new AjaxOptions()
+                                {
+                                    OnSuccess = "MultipartialUpdate"
+                                }))
+        {
+            <div class="row">
+                <div class="col-md-7" style="padding-right:0px">
+                    @Html.TextBoxFor(t => t.txtTurn, new { @class = "form-control", maxlength = "2", placeholder = "Turn", Value = @Model.txtTurn, pattern = ".{2}", required = "required" })
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" id="btnSelectTurn" name="Command" value="Select" @Model.disableInputTurn class="btn btn-success btn-block btn-sm">S</button>
+                </div>
+
+            </div>
+
+            <div class="row" style="padding-top:5px">
+                <div class="col-md-3">
+                    <button type="submit" id="btnRandomTurn" name="Command" value="Random" formnovalidate @Model.disableInputTurn class="btn btn-warning btn-sm">R</button>
+                </div>
+                <div class="col-md-3" style="padding-left:0px">
+                    <button type="submit" id="btnClearTurn" name="Command" value="Clear" formnovalidate @Model.disableClearTurn class="btn btn-danger btn-sm">C</button>
+                </div>
+            </div>
+        }
+    </div>
+
+
+
+    <div class="col-md-4">
+        @using (Ajax.BeginForm("MultipleCommand", "Odds", new { street = "R" }, new AjaxOptions()
+                                {
+                                    OnSuccess = "MultipartialUpdate"
+                                }))
+        {
+            <div class="row">
+                <div class="col-md-7" style="padding-right:0px">
+                    @Html.TextBoxFor(t => t.txtRiver, new { @class = "form-control", maxlength = "2", placeholder = "River", Value = @Model.txtRiver, pattern = ".{2}", required = "required" })
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" id="btnSelectRiver" name="Command" value="Select" @Model.disableInputRiver class="btn btn-success btn-block btn-sm">S</button>
+                </div>
+
+            </div>
+            <div class="row" style="padding-top:5px">
+                <div class="col-md-3">
+                    <button type="submit" id="btnRandomRiver" name="Command" value="Random" formnovalidate @Model.disableInputRiver class="btn btn-warning btn-sm">R</button>
+                </div>
+                <div class="col-md-3" style="padding-left:0px">
+                    <button type="submit" id="btnClearRiver" name="Command" value="Clear" formnovalidate @Model.disableClearRiver class="btn btn-danger btn-sm">C</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<hr />
+<div class="row">
+    <div class="col-md-5 col-md-offset-3">
+        <img id="imgHand1" src="@Model.imgHand1" height="150" width="100" style="padding:3px; background-color:lightcoral" />
+        <img id="imgHand2" src="@Model.imgHand2" height="150" width="100" style="padding:3px; background-color:lightcoral" />
+    </div>
+    <div class="col-md-4">
+        <br /><br />
+        @using (Ajax.BeginForm("MultipleCommand", "Odds", new { street = "H" }, new AjaxOptions()
+                                {
+                                    OnSuccess = "MultipartialUpdate"
+                                }))
+        {
+            <div class="row">
+                <div class="col-md-7" style="padding-right:0px">
+                    @Html.TextBoxFor(t => t.txtHand, new { @class = "form-control", maxlength = "4", placeholder = "Hand", Value = @Model.txtHand, pattern = ".{4}", required = "required" })
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" id="btnSelectHand" name="Command" value="Select" class="btn btn-success btn-block btn-sm">S</button>
+                </div>
+
+            </div>
+            <div class="row" style="padding-top:5px">
+                <div class="col-md-3">
+                    <button type="submit" id="btnRandomHand" name="Command" value="Random" formnovalidate class="btn btn-warning btn-sm">R</button>
+                </div>
+                <div class="col-md-3" style="padding-left:0px">
+                    <button type="submit" id="btnClearHand" name="Command" value="Clear" formnovalidate @Model.disableClearHand class="btn btn-danger btn-sm">C</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
